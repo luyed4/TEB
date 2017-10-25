@@ -1,0 +1,865 @@
+<h3 id="download-chartjs">Download Chart.js</h3>
+
+<p>To download a zip, go to <a href="https://github.com/chartjs/Chart.js">Chart.js on Github</a> and choose the version that is right for your application.
+* <a href="https://raw.githubusercontent.com/chartjs/Chart.js/v2.0-dev/dist/Chart.js">Standard build</a> (~31kB gzipped)
+* <a href="https://raw.githubusercontent.com/chartjs/Chart.js/v2.0-dev/dist/Chart.bundle.js">Bundled with Moment.js</a> (~45kB gzipped)
+* <a href="https://cdnjs.com/libraries/Chart.js">CDN Versions</a></p>
+
+<p>To install via npm / bower:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>npm install chart.js --save
+</code></pre>
+</div>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>bower install Chart.js --save
+</code></pre>
+</div>
+
+<h3 id="installation">Installation</h3>
+
+<p>To import Chart.js using an old-school script tag:</p>
+
+<div class="language-html highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"Chart.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;script&gt;</span>
+    <span class="kd">var</span> <span class="nx">myChart</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Chart</span><span class="p">({...})</span>
+<span class="nt">&lt;/script&gt;</span>
+</code></pre>
+</div>
+
+<p>To import Chart.js using an awesome module loader:</p>
+
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code>
+<span class="c1">// Using CommonJS</span>
+<span class="kd">var</span> <span class="nx">Chart</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'src/chart.js'</span><span class="p">)</span>
+<span class="kd">var</span> <span class="nx">myChart</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Chart</span><span class="p">({...})</span>
+
+<span class="c1">// ES6</span>
+<span class="kr">import</span> <span class="nx">Chart</span> <span class="nx">from</span> <span class="s1">'src/chart.js'</span>
+<span class="kd">let</span> <span class="nx">myChart</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Chart</span><span class="p">({...})</span>
+
+<span class="c1">// Using requirejs</span>
+<span class="nx">require</span><span class="p">([</span><span class="s1">'path/to/Chartjs'</span><span class="p">],</span> <span class="kd">function</span><span class="p">(</span><span class="nx">Chart</span><span class="p">){</span>
+ <span class="kd">var</span> <span class="nx">myChart</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Chart</span><span class="p">({...})</span>
+<span class="p">})</span>
+
+</code></pre>
+</div>
+
+<h3 id="creating-a-chart">Creating a Chart</h3>
+
+<p>To create a chart, we need to instantiate the <code class="highlighter-rouge">Chart</code> class. To do this, we need to pass in the node, jQuery instance, or 2d context of the canvas of where we want to draw the chart. Here’s an example.</p>
+
+<div class="language-html highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;canvas</span> <span class="na">id=</span><span class="s">"myChart"</span> <span class="na">width=</span><span class="s">"400"</span> <span class="na">height=</span><span class="s">"400"</span><span class="nt">&gt;&lt;/canvas&gt;</span>
+</code></pre>
+</div>
+
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="c1">// Any of the following formats may be used</span>
+<span class="kd">var</span> <span class="nx">ctx</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">"myChart"</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">ctx</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">"myChart"</span><span class="p">).</span><span class="nx">getContext</span><span class="p">(</span><span class="s2">"2d"</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">ctx</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s2">"#myChart"</span><span class="p">);</span>
+</code></pre>
+</div>
+
+<p>Once you have the element or context, you’re ready to instantiate a pre-defined chart-type or create your own!</p>
+
+<p>The following example instantiates a bar chart showing the number of votes for different colors and the y-axis starting at 0.</p>
+
+<div class="language-html highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;canvas</span> <span class="na">id=</span><span class="s">"myChart"</span> <span class="na">width=</span><span class="s">"400"</span> <span class="na">height=</span><span class="s">"400"</span><span class="nt">&gt;&lt;/canvas&gt;</span>
+<span class="nt">&lt;script&gt;</span>
+<span class="kd">var</span> <span class="nx">ctx</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">"myChart"</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">myChart</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Chart</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">type</span><span class="p">:</span> <span class="s1">'bar'</span><span class="p">,</span>
+    <span class="na">data</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">labels</span><span class="p">:</span> <span class="p">[</span><span class="s2">"Red"</span><span class="p">,</span> <span class="s2">"Blue"</span><span class="p">,</span> <span class="s2">"Yellow"</span><span class="p">,</span> <span class="s2">"Green"</span><span class="p">,</span> <span class="s2">"Purple"</span><span class="p">,</span> <span class="s2">"Orange"</span><span class="p">],</span>
+        <span class="na">datasets</span><span class="p">:</span> <span class="p">[{</span>
+            <span class="na">label</span><span class="p">:</span> <span class="s1">'# of Votes'</span><span class="p">,</span>
+            <span class="na">data</span><span class="p">:</span> <span class="p">[</span><span class="mi">12</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+        <span class="p">}]</span>
+    <span class="p">},</span>
+    <span class="na">options</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">scales</span><span class="p">:</span> <span class="p">{</span>
+            <span class="na">yAxes</span><span class="p">:</span> <span class="p">[{</span>
+                <span class="na">ticks</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="na">beginAtZero</span><span class="p">:</span><span class="kc">true</span>
+                <span class="p">}</span>
+            <span class="p">}]</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+<span class="nt">&lt;/script&gt;</span>
+</code></pre>
+</div>
+
+<p>It’s that easy to get started using Chart.js! From here you can explore the many options that can help you customise your charts with scales, tooltips, labels, colors, custom actions, and much more.</p>
+
+<h3 id="global-chart-configuration">Global chart configuration</h3>
+
+<p>This concept was introduced in Chart.js 1.0 to keep configuration DRY, and allow for changing options globally across chart types, avoiding the need to specify options for each instance, or the default for a particular chart type.</p>
+
+<p>Chart.js merges configurations and options in a few places with the global defaults using chart type defaults and scales defaults. This way you can be as specific as you want in your individual chart configs, or change the defaults for Chart.js as a whole.</p>
+
+<p>The global options are defined in <code class="highlighter-rouge">Chart.defaults.global</code>.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>responsive</td>
+      <td>Boolean</td>
+      <td>true</td>
+      <td>Resizes when the canvas container does.</td>
+    </tr>
+    <tr>
+      <td>responsiveAnimationDuration</td>
+      <td>Number</td>
+      <td>0</td>
+      <td>Duration in milliseconds it takes to animate to new size after a resize event.</td>
+    </tr>
+    <tr>
+      <td>maintainAspectRatio</td>
+      <td>Boolean</td>
+      <td>true</td>
+      <td>Maintain the original canvas aspect ratio <code class="highlighter-rouge">(width / height)</code> when resizing</td>
+    </tr>
+    <tr>
+      <td>events</td>
+      <td>Array[String]</td>
+      <td><code class="highlighter-rouge">["mousemove", "mouseout", "click", "touchstart", "touchmove", "touchend"]</code></td>
+      <td>Events that the chart should listen to for tooltips and hovering</td>
+    </tr>
+    <tr>
+      <td>hover</td>
+      <td>Object</td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td><em>hover</em>.onHover</td>
+      <td>Function</td>
+      <td>null</td>
+      <td>Called when any of the events fire. Called in the context of the chart and passed an array of active elements (bars, points, etc)</td>
+    </tr>
+    <tr>
+      <td><em>hover</em>.mode</td>
+      <td>String</td>
+      <td>‘single’</td>
+      <td>Sets which elements hover. Acceptable options are <code class="highlighter-rouge">'single'</code>, <code class="highlighter-rouge">'label'</code>, or <code class="highlighter-rouge">'dataset'</code>. <code class="highlighter-rouge">single</code> highlights the closest element. <code class="highlighter-rouge">label</code> highlights elements in all datasets at the same <code class="highlighter-rouge">X</code> value. <code class="highlighter-rouge">dataset</code> highlights the closest dataset.</td>
+    </tr>
+    <tr>
+      <td><em>hover</em>.animationDuration</td>
+      <td>Number</td>
+      <td>400</td>
+      <td>Duration in milliseconds it takes to animate hover style changes</td>
+    </tr>
+    <tr>
+      <td>onClick</td>
+      <td>Function</td>
+      <td>null</td>
+      <td>Called if the event is of type ‘mouseup’ or ‘click’. Called in the context of the chart and passed an array of active elements</td>
+    </tr>
+    <tr>
+      <td>defaultColor</td>
+      <td>Color</td>
+      <td>‘rgba(0,0,0,0.1)’</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>defaultFontColor</td>
+      <td>Color</td>
+      <td>‘#666’</td>
+      <td>Default font color for all text</td>
+    </tr>
+    <tr>
+      <td>defaultFontFamily</td>
+      <td>String</td>
+      <td>“‘Helvetica Neue’, ‘Helvetica’, ‘Arial’, sans-serif”</td>
+      <td>Default font family for all text</td>
+    </tr>
+    <tr>
+      <td>defaultFontSize</td>
+      <td>Number</td>
+      <td>12</td>
+      <td>Default font size (in px) for text. Does not apply to radialLinear scale point labels</td>
+    </tr>
+    <tr>
+      <td>defaultFontStyle</td>
+      <td>String</td>
+      <td>‘normal’</td>
+      <td>Default font style. Does not apply to tooltip title or footer. Does not apply to chart title</td>
+    </tr>
+    <tr>
+      <td>legendCallback</td>
+      <td>Function</td>
+      <td><code class="highlighter-rouge"> function (chart) { }</code></td>
+      <td>Function to generate a legend. Receives the chart object to generate a legend from. Default implementation returns an HTML string.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The global options for the chart title is defined in <code class="highlighter-rouge">Chart.defaults.global.title</code></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>display</td>
+      <td>Boolean</td>
+      <td>false</td>
+      <td>Show the title block</td>
+    </tr>
+    <tr>
+      <td>position</td>
+      <td>String</td>
+      <td>‘top’</td>
+      <td>Position of the title. ‘top’ or ‘bottom’ are allowed</td>
+    </tr>
+    <tr>
+      <td>fullWidth</td>
+      <td>Boolean</td>
+      <td>true</td>
+      <td>Marks that this box should take the full width of the canvas (pushing down other boxes)</td>
+    </tr>
+    <tr>
+      <td>fontColor</td>
+      <td>Color</td>
+      <td>‘#666’</td>
+      <td>Text color</td>
+    </tr>
+    <tr>
+      <td>fontFamily</td>
+      <td>String</td>
+      <td>‘Helvetica Neue’</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>fontSize</td>
+      <td>Number</td>
+      <td>12</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>fontStyle</td>
+      <td>String</td>
+      <td>‘bold’</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>padding</td>
+      <td>Number</td>
+      <td>10</td>
+      <td>Number of pixels to add above and below the title text</td>
+    </tr>
+    <tr>
+      <td>text</td>
+      <td>String</td>
+      <td>’’</td>
+      <td>Title text</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The global options for the chart legend is defined in <code class="highlighter-rouge">Chart.defaults.global.legend</code></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>display</td>
+      <td>Boolean</td>
+      <td>true</td>
+      <td>Is the legend displayed</td>
+    </tr>
+    <tr>
+      <td>position</td>
+      <td>String</td>
+      <td>‘top’</td>
+      <td>Position of the legend. Options are ‘top’ or ‘bottom’</td>
+    </tr>
+    <tr>
+      <td>fullWidth</td>
+      <td>Boolean</td>
+      <td>true</td>
+      <td>Marks that this box should take the full width of the canvas (pushing down other boxes)</td>
+    </tr>
+    <tr>
+      <td>onClick</td>
+      <td>Function</td>
+      <td><code class="highlighter-rouge">function(event, legendItem) {}</code></td>
+      <td>A callback that is called when a click is registered on top of a label item</td>
+    </tr>
+    <tr>
+      <td>labels</td>
+      <td>Object</td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td><em>labels</em>.boxWidth</td>
+      <td>Number</td>
+      <td>40</td>
+      <td>Width of coloured box</td>
+    </tr>
+    <tr>
+      <td><em>labels</em>.fontSize</td>
+      <td>Number</td>
+      <td>12</td>
+      <td>Font size</td>
+    </tr>
+    <tr>
+      <td><em>labels</em>.fontStyle</td>
+      <td>String</td>
+      <td>“normal”</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td><em>labels</em>.fontColor</td>
+      <td>Color</td>
+      <td>“#666”</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td><em>labels</em>.fontFamily</td>
+      <td>String</td>
+      <td>“Helvetica Neue”</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td><em>labels</em>.padding</td>
+      <td>Number</td>
+      <td>10</td>
+      <td>Padding between rows of colored boxes</td>
+    </tr>
+    <tr>
+      <td><em>labels</em>.generateLabels:</td>
+      <td>Function</td>
+      <td><code class="highlighter-rouge">function(data) {  }</code></td>
+      <td>Generates legend items for each thing in the legend. Default implementation returns the text + styling for the color box. Styles that can be returned are <code class="highlighter-rouge">fillStyle</code>, <code class="highlighter-rouge">strokeStyle</code>, <code class="highlighter-rouge">lineCap</code>, <code class="highlighter-rouge">lineDash</code>, <code class="highlighter-rouge">lineDashOffset</code>, <code class="highlighter-rouge">lineWidth</code>, <code class="highlighter-rouge">lineJoin</code>. Return a <code class="highlighter-rouge">hidden</code> attribute to indicate that the label refers to something that is not visible. A strikethrough style will be given to the text in this case.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The global options for tooltips are defined in <code class="highlighter-rouge">Chart.defaults.global.tooltips</code>.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th style="text-align: center">Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>enabled</td>
+      <td style="text-align: center">Boolean</td>
+      <td>true</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>custom</td>
+      <td style="text-align: center"> </td>
+      <td>null</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>mode</td>
+      <td style="text-align: center">String</td>
+      <td>‘single’</td>
+      <td>Sets which elements appear in the tooltip. Acceptable options are <code class="highlighter-rouge">'single'</code> or <code class="highlighter-rouge">'label'</code>. <code class="highlighter-rouge">single</code> highlights the closest element. <code class="highlighter-rouge">label</code> highlights elements in all datasets at the same <code class="highlighter-rouge">X</code> value.</td>
+    </tr>
+    <tr>
+      <td>backgroundColor</td>
+      <td style="text-align: center">Color</td>
+      <td>‘rgba(0,0,0,0.8)’</td>
+      <td>Background color of the tooltip</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td style="text-align: center"> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Label</td>
+      <td style="text-align: center"> </td>
+      <td> </td>
+      <td>There are three labels you can control. <code class="highlighter-rouge">title</code>, <code class="highlighter-rouge">body</code>, <code class="highlighter-rouge">footer</code> the star (*) represents one of these three. <em>(i.e. titleFontFamily, footerSpacing)</em></td>
+    </tr>
+    <tr>
+      <td>*FontFamily</td>
+      <td style="text-align: center">String</td>
+      <td>“‘Helvetica Neue’, ‘Helvetica’, ‘Arial’, sans-serif”</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>*FontSize</td>
+      <td style="text-align: center">Number</td>
+      <td>12</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>*FontStyle</td>
+      <td style="text-align: center">String</td>
+      <td>title - “bold”, body - “normal”, footer - “bold”</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>*Spacing</td>
+      <td style="text-align: center">Number</td>
+      <td>2</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>*Color</td>
+      <td style="text-align: center">Color</td>
+      <td>“#fff”</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>*Align</td>
+      <td style="text-align: center">String</td>
+      <td>“left”</td>
+      <td>text alignment. See <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/textAlign">MDN Canvas Documentation</a></td>
+    </tr>
+    <tr>
+      <td>titleMarginBottom</td>
+      <td style="text-align: center">Number</td>
+      <td>6</td>
+      <td>Margin to add on bottom of title section</td>
+    </tr>
+    <tr>
+      <td>footerMarginTop</td>
+      <td style="text-align: center">Number</td>
+      <td>6</td>
+      <td>Margin to add before drawing the footer</td>
+    </tr>
+    <tr>
+      <td>xPadding</td>
+      <td style="text-align: center">Number</td>
+      <td>6</td>
+      <td>Padding to add on left and right of tooltip</td>
+    </tr>
+    <tr>
+      <td>yPadding</td>
+      <td style="text-align: center">Number</td>
+      <td>6</td>
+      <td>Padding to add on top and bottom of tooltip</td>
+    </tr>
+    <tr>
+      <td>caretSize</td>
+      <td style="text-align: center">Number</td>
+      <td>5</td>
+      <td>Size, in px, of the tooltip arrow</td>
+    </tr>
+    <tr>
+      <td>cornerRadius</td>
+      <td style="text-align: center">Number</td>
+      <td>6</td>
+      <td>Radius of tooltip corner curves</td>
+    </tr>
+    <tr>
+      <td>multiKeyBackground</td>
+      <td style="text-align: center">Color</td>
+      <td>“#fff”</td>
+      <td>Color to draw behind the colored boxes when multiple items are in the tooltip</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td style="text-align: center"> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>callbacks</td>
+      <td style="text-align: center">Object</td>
+      <td>-</td>
+      <td>V2.0 introduces callback functions as a replacement for the template engine in v1. The tooltip has the following callbacks for providing text. For all functions, ‘this’ will be the tooltip object create from the Chart.Tooltip constructor</td>
+    </tr>
+    <tr>
+      <td><strong>Callback Functions</strong></td>
+      <td style="text-align: center"> </td>
+      <td> </td>
+      <td>All functions are called with the same arguments</td>
+    </tr>
+    <tr>
+      <td>xLabel</td>
+      <td style="text-align: center">String or Array[Strings]</td>
+      <td> </td>
+      <td>This is the xDataValue for each item to be displayed in the tooltip</td>
+    </tr>
+    <tr>
+      <td>yLabel</td>
+      <td style="text-align: center">String or Array[Strings]</td>
+      <td> </td>
+      <td>This is the yDataValue for each item to be displayed in the tooltip</td>
+    </tr>
+    <tr>
+      <td>index</td>
+      <td style="text-align: center">Number</td>
+      <td> </td>
+      <td>Data index.</td>
+    </tr>
+    <tr>
+      <td>data</td>
+      <td style="text-align: center">Object</td>
+      <td> </td>
+      <td>Data object passed to chart.</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">return</code></td>
+      <td style="text-align: center">String or Array[Strings]</td>
+      <td> </td>
+      <td>All functions must return either a string or an array of strings. Arrays of strings are treated as multiple lines of text.</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td style="text-align: center"> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td><em>callbacks</em>.beforeTitle</td>
+      <td style="text-align: center">Function</td>
+      <td>none</td>
+      <td>Text to render before the title</td>
+    </tr>
+    <tr>
+      <td><em>callbacks</em>.title</td>
+      <td style="text-align: center">Function</td>
+      <td><code class="highlighter-rouge">function(tooltipItems, data) { //Pick first xLabel }</code></td>
+      <td>Text to render as the title</td>
+    </tr>
+    <tr>
+      <td><em>callbacks</em>.afterTitle</td>
+      <td style="text-align: center">Function</td>
+      <td>none</td>
+      <td>Text to render after the ttiel</td>
+    </tr>
+    <tr>
+      <td><em>callbacks</em>.beforeBody</td>
+      <td style="text-align: center">Function</td>
+      <td>none</td>
+      <td>Text to render before the body section</td>
+    </tr>
+    <tr>
+      <td><em>callbacks</em>.beforeLabel</td>
+      <td style="text-align: center">Function</td>
+      <td>none</td>
+      <td>Text to render before an individual label</td>
+    </tr>
+    <tr>
+      <td><em>callbacks</em>.label</td>
+      <td style="text-align: center">Function</td>
+      <td><code class="highlighter-rouge">function(tooltipItem, data) { // Returns "datasetLabel: tooltipItem.yLabel" }</code></td>
+      <td>Text to render as label</td>
+    </tr>
+    <tr>
+      <td><em>callbacks</em>.afterLabel</td>
+      <td style="text-align: center">Function</td>
+      <td>none</td>
+      <td>Text to render after an individual label</td>
+    </tr>
+    <tr>
+      <td><em>callbacks</em>.afterBody</td>
+      <td style="text-align: center">Function</td>
+      <td>none</td>
+      <td>Text to render after the body section</td>
+    </tr>
+    <tr>
+      <td><em>callbacks</em>.beforeFooter</td>
+      <td style="text-align: center">Function</td>
+      <td>none</td>
+      <td>Text to render before the footer section</td>
+    </tr>
+    <tr>
+      <td><em>callbacks</em>.footer</td>
+      <td style="text-align: center">Function</td>
+      <td>none</td>
+      <td>Text to render as the footer</td>
+    </tr>
+    <tr>
+      <td><em>callbacks</em>.afterFooter</td>
+      <td style="text-align: center">Function</td>
+      <td>none</td>
+      <td>Text to render after the footer section</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The global options for animations are defined in <code class="highlighter-rouge">Chart.defaults.global.animation</code>.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th style="text-align: center">Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>duration</td>
+      <td style="text-align: center">Number</td>
+      <td>1000</td>
+      <td>The number of milliseconds an animation takes.</td>
+    </tr>
+    <tr>
+      <td>easing</td>
+      <td style="text-align: center">String</td>
+      <td>“easeOutQuart”</td>
+      <td>Easing function to use.</td>
+    </tr>
+    <tr>
+      <td>onProgress</td>
+      <td style="text-align: center">Function</td>
+      <td>none</td>
+      <td>Callback called on each step of an animation. Passed a single argument, an object, containing the chart instance and an object with details of the animation.</td>
+    </tr>
+    <tr>
+      <td>onComplete</td>
+      <td style="text-align: center">Function</td>
+      <td>none</td>
+      <td>Callback called at the end of an animation. Passed the same arguments as <code class="highlighter-rouge">onProgress</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The global options for elements are defined in <code class="highlighter-rouge">Chart.defaults.global.elements</code>.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th style="text-align: center">Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>arc</td>
+      <td style="text-align: center">Object</td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td><em>arc</em>.backgroundColor</td>
+      <td style="text-align: center">Color</td>
+      <td><code class="highlighter-rouge">Chart.defaults.global.defaultColor</code></td>
+      <td>Default fill color for arcs</td>
+    </tr>
+    <tr>
+      <td><em>arc</em>.borderColor</td>
+      <td style="text-align: center">Color</td>
+      <td>“#fff”</td>
+      <td>Default stroke color for arcs</td>
+    </tr>
+    <tr>
+      <td><em>arc</em>.borderWidth</td>
+      <td style="text-align: center">Number</td>
+      <td>2</td>
+      <td>Default stroke width for arcs</td>
+    </tr>
+    <tr>
+      <td>line</td>
+      <td style="text-align: center">Object</td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td><em>line</em>.lineTension</td>
+      <td style="text-align: center">Number</td>
+      <td>0.4</td>
+      <td>Default bezier curve tension. Set to <code class="highlighter-rouge">0</code> for no bezier curves.</td>
+    </tr>
+    <tr>
+      <td><em>line</em>.backgroundColor</td>
+      <td style="text-align: center">Color</td>
+      <td><code class="highlighter-rouge">Chart.defaults.global.defaultColor</code></td>
+      <td>Default line fill color</td>
+    </tr>
+    <tr>
+      <td><em>line</em>.borderWidth</td>
+      <td style="text-align: center">Number</td>
+      <td>3</td>
+      <td>Default line stroke width</td>
+    </tr>
+    <tr>
+      <td><em>line</em>.borderColor</td>
+      <td style="text-align: center">Color</td>
+      <td><code class="highlighter-rouge">Chart.defaults.global.defaultColor</code></td>
+      <td>Default line stroke color</td>
+    </tr>
+    <tr>
+      <td><em>line</em>.borderCapStyle</td>
+      <td style="text-align: center">String</td>
+      <td>‘butt’</td>
+      <td>Default line cap style. See <a href="https://developer.mozilla.org/en/docs/Web/API/CanvasRenderingContext2D/lineCap">MDN</a></td>
+    </tr>
+    <tr>
+      <td><em>line</em>.borderDash</td>
+      <td style="text-align: center">Array</td>
+      <td><code class="highlighter-rouge">[]</code></td>
+      <td>Default line dash. See <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/setLineDash">MDN</a></td>
+    </tr>
+    <tr>
+      <td><em>line</em>.borderDashOffset</td>
+      <td style="text-align: center">Number</td>
+      <td>0.0</td>
+      <td>Default line dash offset. See <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineDashOffset">MDN</a></td>
+    </tr>
+    <tr>
+      <td><em>line</em>.borderJoinStyle</td>
+      <td style="text-align: center">String</td>
+      <td>‘miter’</td>
+      <td>Default line join style. See <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineJoin">MDN</a></td>
+    </tr>
+    <tr>
+      <td><em>line</em>.fill</td>
+      <td style="text-align: center">Boolean</td>
+      <td>true</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>point</td>
+      <td style="text-align: center">Object</td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td><em>point</em>.radius</td>
+      <td style="text-align: center">Number</td>
+      <td>3</td>
+      <td>Default point radius</td>
+    </tr>
+    <tr>
+      <td><em>point</em>.pointStyle</td>
+      <td style="text-align: center">String</td>
+      <td>‘circle’</td>
+      <td>Default point style</td>
+    </tr>
+    <tr>
+      <td><em>point</em>.backgroundColor</td>
+      <td style="text-align: center">Color</td>
+      <td><code class="highlighter-rouge">Chart.defaults.global.defaultColor</code></td>
+      <td>Default point fill color</td>
+    </tr>
+    <tr>
+      <td><em>point</em>.borderWidth</td>
+      <td style="text-align: center">Number</td>
+      <td>1</td>
+      <td>Default point stroke width</td>
+    </tr>
+    <tr>
+      <td><em>point</em>.borderColor</td>
+      <td style="text-align: center">Color</td>
+      <td><code class="highlighter-rouge">Chart.defaults.global.defaultColor</code></td>
+      <td>Default point stroke color</td>
+    </tr>
+    <tr>
+      <td><em>point</em>.hitRadius</td>
+      <td style="text-align: center">Number</td>
+      <td>1</td>
+      <td>Extra radius added to point radius for hit detection</td>
+    </tr>
+    <tr>
+      <td><em>point</em>.hoverRadius</td>
+      <td style="text-align: center">Number</td>
+      <td>4</td>
+      <td>Default point radius when hovered</td>
+    </tr>
+    <tr>
+      <td><em>point</em>.hoverBorderWidth</td>
+      <td style="text-align: center">Number</td>
+      <td>1</td>
+      <td>Default stroke width when hovered</td>
+    </tr>
+    <tr>
+      <td>rectangle</td>
+      <td style="text-align: center">Object</td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td><em>rectangle</em>.backgroundColor</td>
+      <td style="text-align: center">Color</td>
+      <td><code class="highlighter-rouge">Chart.defaults.global.defaultColor</code></td>
+      <td>Default bar fill color</td>
+    </tr>
+    <tr>
+      <td><em>rectangle</em>.borderWidth</td>
+      <td style="text-align: center">Number</td>
+      <td>0</td>
+      <td>Default bar stroke width</td>
+    </tr>
+    <tr>
+      <td><em>rectangle</em>.borderColor</td>
+      <td style="text-align: center">Color</td>
+      <td><code class="highlighter-rouge">Chart.defaults.global.defaultColor</code></td>
+      <td>Default bar stroke color</td>
+    </tr>
+    <tr>
+      <td><em>rectangle</em>.borderSkipped</td>
+      <td style="text-align: center">String</td>
+      <td>‘bottom’</td>
+      <td>Default skipped (excluded) border for rectangle. Can be one of <code class="highlighter-rouge">bottom</code>, <code class="highlighter-rouge">left</code>, <code class="highlighter-rouge">top</code>, <code class="highlighter-rouge">right</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>If for example, you wanted all charts created to be responsive, and resize when the browser window does, the following setting can be changed:</p>
+
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="nx">Chart</span><span class="p">.</span><span class="nx">defaults</span><span class="p">.</span><span class="nx">global</span><span class="p">.</span><span class="nx">responsive</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+</code></pre>
+</div>
+
+<p>Now, every time we create a chart, <code class="highlighter-rouge">options.responsive</code> will be <code class="highlighter-rouge">true</code>.</p>
+
+<h3 id="colors">Colors</h3>
+<p>When supplying colors to Chart options, you can use a number of formats. You can specify the color as a string in hexadecimal, RGB, or HSL notations.</p>
+
+<p>You can also pass a <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasGradient">CanvasGradient</a> object. You will need to create this before passing to the chart, but using it you can achieve some interesting effects.</p>
+
+<p>The final option is to pass a <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasPattern">CanvasPattern</a> object. For example, if you wanted to fill a dataset with a pattern from an image you could do the following.</p>
+
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">img</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Image</span><span class="p">();</span>
+<span class="nx">img</span><span class="p">.</span><span class="nx">src</span> <span class="o">=</span> <span class="s1">'https://example.com/my_image.png'</span><span class="p">;</span>
+<span class="nx">img</span><span class="p">.</span><span class="nx">onload</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">ctx</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">'canvas'</span><span class="p">).</span><span class="nx">getContext</span><span class="p">(</span><span class="s1">'2d'</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">fillPattern</span> <span class="o">=</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">CreatePattern</span><span class="p">(</span><span class="nx">img</span><span class="p">,</span> <span class="s1">'repeat'</span><span class="p">);</span>
+
+    <span class="kd">var</span> <span class="nx">chart</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Chart</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span> <span class="p">{</span>
+        <span class="na">data</span><span class="p">:</span> <span class="p">{</span>
+            <span class="na">labels</span><span class="p">:</span> <span class="p">[</span><span class="s1">'Item 1'</span><span class="p">,</span> <span class="s1">'Item 2'</span><span class="p">,</span> <span class="s1">'Item 3'</span><span class="p">],</span>
+            <span class="na">datasets</span><span class="p">:</span> <span class="p">[{</span>
+                <span class="na">data</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">],</span>
+                <span class="na">backgroundColor</span><span class="p">:</span> <span class="nx">fillPattern</span>
+            <span class="p">}]</span>
+        <span class="p">}</span>
+    <span class="p">})</span>
+<span class="p">}</span>
+
+</code></pre>
+</div>

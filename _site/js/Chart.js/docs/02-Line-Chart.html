@@ -1,0 +1,327 @@
+<h3 id="introduction">Introduction</h3>
+<p>A line chart is a way of plotting data points on a line.</p>
+
+<p>Often, it is used to show trend data, and the comparison of two data sets.</p>
+
+<div class="canvas-holder">
+	<canvas width="250" height="125"></canvas>
+</div>
+
+<h3 id="example-usage">Example usage</h3>
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">myLineChart</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Chart</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span> <span class="p">{</span>
+	<span class="na">type</span><span class="p">:</span> <span class="s1">'line'</span><span class="p">,</span>
+	<span class="na">data</span><span class="p">:</span> <span class="nx">data</span><span class="p">,</span>
+	<span class="na">options</span><span class="p">:</span> <span class="nx">options</span>
+<span class="p">});</span>
+</code></pre>
+</div>
+
+<p>Alternatively a line chart can be created using syntax similar to the v1.0 syntax
+<code class="highlighter-rouge">javascript
+var myLineChart = Chart.Line(ctx, {
+	data: data,
+	options: options
+});
+</code>
+### Data structure</p>
+
+<p>The following options can be included in a line chart dataset to configure options for that specific dataset.</p>
+
+<p>All point* properties can be specified as an array. If these are set to an array value, the first value applies to the first point, the second value to the second point, and so on.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property</th>
+      <th>Type</th>
+      <th>Usage</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>data</td>
+      <td><code class="highlighter-rouge">Array&lt;Number&gt;</code></td>
+      <td>The data to plot in a line</td>
+    </tr>
+    <tr>
+      <td>label</td>
+      <td><code class="highlighter-rouge">String</code></td>
+      <td>The label for the dataset which appears in the legend and tooltips</td>
+    </tr>
+    <tr>
+      <td>xAxisID</td>
+      <td><code class="highlighter-rouge">String</code></td>
+      <td>The ID of the x axis to plot this dataset on</td>
+    </tr>
+    <tr>
+      <td>yAxisID</td>
+      <td><code class="highlighter-rouge">String</code></td>
+      <td>The ID of the y axis to plot this dataset on</td>
+    </tr>
+    <tr>
+      <td>fill</td>
+      <td><code class="highlighter-rouge">Boolean</code></td>
+      <td>If true, fill the area under the line</td>
+    </tr>
+    <tr>
+      <td>lineTension</td>
+      <td><code class="highlighter-rouge">Number</code></td>
+      <td>Bezier curve tension of the line. Set to 0 to draw straightlines. <em>Note</em> This was renamed from ‘tension’ but the old name still works.</td>
+    </tr>
+    <tr>
+      <td>backgroundColor</td>
+      <td><code class="highlighter-rouge">Color</code></td>
+      <td>The fill color under the line. See <a href="#getting-started-colors">Colors</a></td>
+    </tr>
+    <tr>
+      <td>borderWidth</td>
+      <td><code class="highlighter-rouge">Number</code></td>
+      <td>The width of the line in pixels</td>
+    </tr>
+    <tr>
+      <td>borderColor</td>
+      <td><code class="highlighter-rouge">Color</code></td>
+      <td>The color of the line.</td>
+    </tr>
+    <tr>
+      <td>borderCapStyle</td>
+      <td><code class="highlighter-rouge">String</code></td>
+      <td>Cap style of the line. See <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineCap">MDN</a></td>
+    </tr>
+    <tr>
+      <td>borderDash</td>
+      <td><code class="highlighter-rouge">Array&lt;Number&gt;</code></td>
+      <td>Length and spacing of dashes. See <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/setLineDash">MDN</a></td>
+    </tr>
+    <tr>
+      <td>borderDashOffset</td>
+      <td><code class="highlighter-rouge">Number</code></td>
+      <td>Offset for line dashes. See <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineDashOffset">MDN</a></td>
+    </tr>
+    <tr>
+      <td>borderJoinStyle</td>
+      <td><code class="highlighter-rouge">String</code></td>
+      <td>Line joint style. See <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineJoin">MDN</a></td>
+    </tr>
+    <tr>
+      <td>pointBorderColor</td>
+      <td><code class="highlighter-rouge">Color or Array&lt;Color&gt;</code></td>
+      <td>The border color for points.</td>
+    </tr>
+    <tr>
+      <td>pointBackgroundColor</td>
+      <td><code class="highlighter-rouge">Color or Array&lt;Color&gt;</code></td>
+      <td>The fill color for points</td>
+    </tr>
+    <tr>
+      <td>pointBorderWidth</td>
+      <td><code class="highlighter-rouge">Number or Array&lt;Number&gt;</code></td>
+      <td>The width of the point border in pixels</td>
+    </tr>
+    <tr>
+      <td>pointRadius</td>
+      <td><code class="highlighter-rouge">Number or Array&lt;Number&gt;</code></td>
+      <td>The radius of the point shape. If set to 0, nothing is rendered.</td>
+    </tr>
+    <tr>
+      <td>pointHoverRadius</td>
+      <td><code class="highlighter-rouge">Number or Array&lt;Number&gt;</code></td>
+      <td>The radius of the point when hovered</td>
+    </tr>
+    <tr>
+      <td>pointHitRadius</td>
+      <td><code class="highlighter-rouge">Number or Array&lt;Number&gt;</code></td>
+      <td>The pixel size of the non-displayed point that reacts to mouse events</td>
+    </tr>
+    <tr>
+      <td>pointHoverBackgroundColor</td>
+      <td><code class="highlighter-rouge">Color or Array&lt;Color&gt;</code></td>
+      <td>Point background color when hovered</td>
+    </tr>
+    <tr>
+      <td>pointHoverBorderColor</td>
+      <td><code class="highlighter-rouge">Color or Array&lt;Color&gt;</code></td>
+      <td>Point border color when hovered</td>
+    </tr>
+    <tr>
+      <td>pointHoverBorderWidth</td>
+      <td><code class="highlighter-rouge">Number or Array&lt;Number&gt;</code></td>
+      <td>Border width of point when hovered</td>
+    </tr>
+    <tr>
+      <td>pointStyle</td>
+      <td><code class="highlighter-rouge">String or Array&lt;String&gt;</code></td>
+      <td>The style of point. Options include ‘circle’, ‘triangle’, ‘rect’, ‘rectRot’, ‘cross’, ‘crossRot’, ‘star’, ‘line’, and ‘dash’</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>An example data object using these attributes is shown below.
+<code class="highlighter-rouge">javascript
+var data = {
+	labels: ["January", "February", "March", "April", "May", "June", "July"],
+	datasets: [
+		{
+			label: "My First dataset",
+			fill: false,
+			lineTension: 0.1,
+			backgroundColor: "rgba(75,192,192,0.4)",
+			borderColor: "rgba(75,192,192,1)",
+			borderCapStyle: 'butt',
+			borderDash: [],
+			borderDashOffset: 0.0,
+			borderJoinStyle: 'miter',
+			pointBorderColor: "rgba(75,192,192,1)",
+			pointBackgroundColor: "#fff",
+			pointBorderWidth: 1,
+			pointHoverRadius: 5,
+			pointHoverBackgroundColor: "rgba(75,192,192,1)",
+			pointHoverBorderColor: "rgba(220,220,220,1)",
+			pointHoverBorderWidth: 2,
+			pointRadius: 1,
+			pointHitRadius: 10,
+			data: [65, 59, 80, 81, 56, 55, 40],
+		}
+	]
+};
+</code></p>
+
+<p>The line chart requires an array of labels. This labels are shown on the X axis. There must be one label for each data point. More labels than datapoints are allowed, in which case the line ends at the last data point.
+The data for line charts is broken up into an array of datasets. Each dataset has a colour for the fill, a colour for the line and colours for the points and strokes of the points. These colours are strings just like CSS. You can use RGBA, RGB, HEX or HSL notation.</p>
+
+<p>The label key on each dataset is optional, and can be used when generating a scale for the chart.</p>
+
+<h3 id="chart-options">Chart options</h3>
+
+<p>These are the customisation options specific to Line charts. These options are merged with the <a href="#getting-started-global-chart-configuration">global chart configuration options</a>, and form the options of the chart.</p>
+
+<p>The default options for line chart are defined in <code class="highlighter-rouge">Chart.defaults.line</code>.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>showLines</td>
+      <td>Boolean</td>
+      <td>true</td>
+      <td>If false, the lines between points are not drawn</td>
+    </tr>
+    <tr>
+      <td>stacked</td>
+      <td>Boolean</td>
+      <td>false</td>
+      <td>If true, lines stack on top of each other along the y axis.</td>
+    </tr>
+    <tr>
+      <td><em>hover</em>.mode</td>
+      <td>String</td>
+      <td>“label”</td>
+      <td>Label’s hover mode. “label” is used since the x axis displays data by the index in the dataset.</td>
+    </tr>
+    <tr>
+      <td>elements</td>
+      <td>Object</td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td><em>elements</em>.point</td>
+      <td>Object</td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td><em>elements.point</em>.radius</td>
+      <td>Number</td>
+      <td><code class="highlighter-rouge">3</code></td>
+      <td>Defines the size of the Point shape. Can be set to zero to skip rendering a point.</td>
+    </tr>
+    <tr>
+      <td>scales</td>
+      <td>Object</td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td><em>scales</em>.xAxes</td>
+      <td>Array</td>
+      <td><code class="highlighter-rouge">[{type:"category","id":"x-axis-0"}]</code></td>
+      <td>Defines all of the x axes used in the chart. See the <a href="#scales">scale documentation</a> for details on the available options.</td>
+    </tr>
+    <tr>
+      <td><em>Options for xAxes</em></td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>String</td>
+      <td>“category”</td>
+      <td>As defined in <a href="#scales-category-scale">“Category”</a>.</td>
+    </tr>
+    <tr>
+      <td>id</td>
+      <td>String</td>
+      <td>“x-axis-0”</td>
+      <td>Id of the axis so that data can bind to it.</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td><em>scales</em>.yAxes</td>
+      <td>Array</td>
+      <td><code class="highlighter-rouge">[{type:"linear","id":"y-axis-0"}]</code></td>
+      <td>Defines all of the y axes used in the chart. See the <a href="#scales">scale documentation</a> for details on the available options.</td>
+    </tr>
+    <tr>
+      <td><em>Options for yAxes</em></td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>String</td>
+      <td>“linear”</td>
+      <td>As defined in <a href="#scales-linear-scale">“Linear”</a>.</td>
+    </tr>
+    <tr>
+      <td>id</td>
+      <td>String</td>
+      <td>“y-axis-0”</td>
+      <td>Id of the axis so that data can bind to it.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>You can override these for your <code class="highlighter-rouge">Chart</code> instance by passing a member <code class="highlighter-rouge">options</code> into the <code class="highlighter-rouge">Line</code> method.</p>
+
+<p>For example, we could have a line chart display without an x axis by doing the following. The config merge is smart enough to handle arrays so that you do not need to specify all axis settings to change one thing.</p>
+
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="k">new</span> <span class="nx">Chart</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span> <span class="p">{</span>
+	<span class="na">type</span><span class="p">:</span> <span class="s1">'line'</span><span class="p">,</span>
+	<span class="na">data</span><span class="p">:</span> <span class="nx">data</span><span class="p">,</span>
+	<span class="na">options</span><span class="p">:</span> <span class="p">{</span>
+		<span class="na">xAxes</span><span class="p">:</span> <span class="p">[{</span>
+			<span class="na">display</span><span class="p">:</span> <span class="kc">false</span>
+		<span class="p">}]</span>
+	<span class="p">}</span>
+<span class="p">});</span>
+<span class="c1">// This will create a chart with all of the default options, merged from the global config,</span>
+<span class="c1">// and the Line chart defaults, but this particular instance will have the x axis not displaying.</span>
+</code></pre>
+</div>
+
+<p>We can also change these defaults values for each Line type that is created, this object is available at <code class="highlighter-rouge">Chart.defaults.line</code>.</p>

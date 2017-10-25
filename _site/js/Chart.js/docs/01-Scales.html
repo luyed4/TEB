@@ -1,0 +1,586 @@
+<p>Scales in v2.0 of Chart.js are significantly more powerful, but also different than those of v1.0.
+* Multiple x &amp; y axes are now supported.
+* A built-in label auto-skip feature now detects would-be overlapping ticks and labels and removes every nth label to keep things displaying normally.
+* Scale titles are now supported
+* New scale types can be extended without writing an entirely new chart type</p>
+
+<p>Every scale extends a core scale class with the following options:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th style="text-align: center">Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>type</td>
+      <td style="text-align: center">String</td>
+      <td>Chart specific.</td>
+      <td>Type of scale being employed. Custom scales can be created and registered with a string key. Options: <a href="#scales-category-scale">“category”</a>, <a href="#scales-linear-scale">“linear”</a>, <a href="#scales-logarithmic-scale">“logarithmic”</a>, <a href="#scales-time-scale">“time”</a>, <a href="#scales-radial-linear-scale">“radialLinear”</a></td>
+    </tr>
+    <tr>
+      <td>display</td>
+      <td style="text-align: center">Boolean</td>
+      <td>true</td>
+      <td>If true, show the scale including gridlines, ticks, and labels. Overrides <em>gridLines.display</em>, <em>scaleLabel.display</em>, and <em>ticks.display</em>.</td>
+    </tr>
+    <tr>
+      <td>position</td>
+      <td style="text-align: center">String</td>
+      <td>“left”</td>
+      <td>Position of the scale. Possible values are top, left, bottom and right.</td>
+    </tr>
+    <tr>
+      <td>beforeUpdate</td>
+      <td style="text-align: center">Function</td>
+      <td>undefined</td>
+      <td>Callback called before the update process starts. Passed a single argument, the scale instance.</td>
+    </tr>
+    <tr>
+      <td>beforeSetDimensions</td>
+      <td style="text-align: center">Function</td>
+      <td>undefined</td>
+      <td>Callback that runs before dimensions are set. Passed a single argument, the scale instance.</td>
+    </tr>
+    <tr>
+      <td>afterSetDimensions</td>
+      <td style="text-align: center">Function</td>
+      <td>undefined</td>
+      <td>Callback that runs after dimensions are set. Passed a single argument, the scale instance.</td>
+    </tr>
+    <tr>
+      <td>beforeDataLimits</td>
+      <td style="text-align: center">Function</td>
+      <td>undefined</td>
+      <td>Callback that runs before data limits are determined. Passed a single argument, the scale instance.</td>
+    </tr>
+    <tr>
+      <td>afterDataLimits</td>
+      <td style="text-align: center">Function</td>
+      <td>undefined</td>
+      <td>Callback that runs after data limits are determined. Passed a single argument, the scale instance.</td>
+    </tr>
+    <tr>
+      <td>beforeBuildTicks</td>
+      <td style="text-align: center">Function</td>
+      <td>undefined</td>
+      <td>Callback that runs before ticks are created. Passed a single argument, the scale instance.</td>
+    </tr>
+    <tr>
+      <td>afterBuildTicks</td>
+      <td style="text-align: center">Function</td>
+      <td>undefined</td>
+      <td>Callback that runs after ticks are created. Useful for filtering ticks. Passed a single argument, the scale instance.</td>
+    </tr>
+    <tr>
+      <td>beforeTickToLabelConversion</td>
+      <td style="text-align: center">Function</td>
+      <td>undefined</td>
+      <td>Callback that runs before ticks are converted into strings. Passed a single argument, the scale instance.</td>
+    </tr>
+    <tr>
+      <td>afterTickToLabelConversion</td>
+      <td style="text-align: center">Function</td>
+      <td>undefined</td>
+      <td>Callback that runs after ticks are converted into strings. Passed a single argument, the scale instance.</td>
+    </tr>
+    <tr>
+      <td>beforeCalculateTickRotation</td>
+      <td style="text-align: center">Function</td>
+      <td>undefined</td>
+      <td>Callback that runs before tick rotation is determined. Passed a single argument, the scale instance.</td>
+    </tr>
+    <tr>
+      <td>afterCalculateTickRotation</td>
+      <td style="text-align: center">Function</td>
+      <td>undefined</td>
+      <td>Callback that runs after tick rotation is determined. Passed a single argument, the scale instance.</td>
+    </tr>
+    <tr>
+      <td>beforeFit</td>
+      <td style="text-align: center">Function</td>
+      <td>undefined</td>
+      <td>Callback that runs before the scale fits to the canvas. Passed a single argument, the scale instance.</td>
+    </tr>
+    <tr>
+      <td>afterFit</td>
+      <td style="text-align: center">Function</td>
+      <td>undefined</td>
+      <td>Callback that runs after the scale fits to the canvas. Passed a single argument, the scale instance.</td>
+    </tr>
+    <tr>
+      <td>afterUpdate</td>
+      <td style="text-align: center">Function</td>
+      <td>undefined</td>
+      <td>Callback that runs at the end of the update process. Passed a single argument, the scale instance.</td>
+    </tr>
+    <tr>
+      <td><strong>gridLines</strong></td>
+      <td style="text-align: center">Object</td>
+      <td>-</td>
+      <td>Options for the grid lines that run perpendicular to the axis.</td>
+    </tr>
+    <tr>
+      <td><em>gridLines</em>.display</td>
+      <td style="text-align: center">Boolean</td>
+      <td>true</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td><em>gridLines</em>.color</td>
+      <td style="text-align: center">Color</td>
+      <td>“rgba(0, 0, 0, 0.1)”</td>
+      <td>Color of the grid lines.</td>
+    </tr>
+    <tr>
+      <td><em>gridLines</em>.lineWidth</td>
+      <td style="text-align: center">Number</td>
+      <td>1</td>
+      <td>Stroke width of grid lines</td>
+    </tr>
+    <tr>
+      <td><em>gridLines</em>.drawOnChartArea</td>
+      <td style="text-align: center">Boolean</td>
+      <td>true</td>
+      <td>If true, draw lines on the chart area inside the axis lines. This is useful when there are multiple axes and you need to control which grid lines are drawn</td>
+    </tr>
+    <tr>
+      <td><em>gridLines</em>.drawTicks</td>
+      <td style="text-align: center">Boolean</td>
+      <td>true</td>
+      <td>If true, draw lines beside the ticks in the axis area beside the chart.</td>
+    </tr>
+    <tr>
+      <td><em>gridLines</em>.tickMarkLength</td>
+      <td style="text-align: center">Number</td>
+      <td>10</td>
+      <td>Length in pixels that the grid lines will draw into the axis area.</td>
+    </tr>
+    <tr>
+      <td><em>gridLines</em>.zeroLineWidth</td>
+      <td style="text-align: center">Number</td>
+      <td>1</td>
+      <td>Stroke width of the grid line for the first index (index 0).</td>
+    </tr>
+    <tr>
+      <td><em>gridLines</em>.zeroLineColor</td>
+      <td style="text-align: center">Color</td>
+      <td>“rgba(0, 0, 0, 0.25)”</td>
+      <td>Stroke color of the grid line for the first index (index 0).</td>
+    </tr>
+    <tr>
+      <td><em>gridLines</em>.offsetGridLines</td>
+      <td style="text-align: center">Boolean</td>
+      <td>false</td>
+      <td>If true, offset labels from grid lines.</td>
+    </tr>
+    <tr>
+      <td><strong>scaleLabel</strong></td>
+      <td style="text-align: center">Object</td>
+      <td> </td>
+      <td>Title for the entire axis.</td>
+    </tr>
+    <tr>
+      <td><em>scaleLabel</em>.display</td>
+      <td style="text-align: center">Boolean</td>
+      <td>false</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td><em>scaleLabel</em>.labelString</td>
+      <td style="text-align: center">String</td>
+      <td>””</td>
+      <td>The text for the title. (i.e. “# of People”, “Response Choices”)</td>
+    </tr>
+    <tr>
+      <td><em>scaleLabel</em>.fontColor</td>
+      <td style="text-align: center">Color</td>
+      <td>“#666”</td>
+      <td>Font color for the scale title.</td>
+    </tr>
+    <tr>
+      <td><em>scaleLabel</em>.fontFamily</td>
+      <td style="text-align: center">String</td>
+      <td>“Helvetica Neue”</td>
+      <td>Font family for the scale title, follows CSS font-family options.</td>
+    </tr>
+    <tr>
+      <td><em>scaleLabel</em>.fontSize</td>
+      <td style="text-align: center">Number</td>
+      <td>12</td>
+      <td>Font size for the scale title.</td>
+    </tr>
+    <tr>
+      <td><em>scaleLabel</em>.fontStyle</td>
+      <td style="text-align: center">String</td>
+      <td>“normal”</td>
+      <td>Font style for the scale title, follows CSS font-style options (i.e. normal, italic, oblique, initial, inherit).</td>
+    </tr>
+    <tr>
+      <td><strong>ticks</strong></td>
+      <td style="text-align: center">Object</td>
+      <td> </td>
+      <td>Settings for the labels that run along the axis.</td>
+    </tr>
+    <tr>
+      <td><em>ticks</em>.beginAtZero</td>
+      <td style="text-align: center">Boolean</td>
+      <td>false</td>
+      <td>If true the scale will be begin at 0, if false the ticks will begin at your smallest data value.</td>
+    </tr>
+    <tr>
+      <td><em>ticks</em>.fontColor</td>
+      <td style="text-align: center">Color</td>
+      <td>“#666”</td>
+      <td>Font color for the tick labels.</td>
+    </tr>
+    <tr>
+      <td><em>ticks</em>.fontFamily</td>
+      <td style="text-align: center">String</td>
+      <td>“Helvetica Neue”</td>
+      <td>Font family for the tick labels, follows CSS font-family options.</td>
+    </tr>
+    <tr>
+      <td><em>ticks</em>.fontSize</td>
+      <td style="text-align: center">Number</td>
+      <td>12</td>
+      <td>Font size for the tick labels.</td>
+    </tr>
+    <tr>
+      <td><em>ticks</em>.fontStyle</td>
+      <td style="text-align: center">String</td>
+      <td>“normal”</td>
+      <td>Font style for the tick labels, follows CSS font-style options (i.e. normal, italic, oblique, initial, inherit).</td>
+    </tr>
+    <tr>
+      <td><em>ticks</em>.maxRotation</td>
+      <td style="text-align: center">Number</td>
+      <td>90</td>
+      <td>Maximum rotation for tick labels when rotating to condense labels. Note: Rotation doesn’t occur until necessary. <em>Note: Only applicable to horizontal scales.</em></td>
+    </tr>
+    <tr>
+      <td><em>ticks</em>.minRotation</td>
+      <td style="text-align: center">Number</td>
+      <td>20</td>
+      <td><em>currently not-implemented</em> Minimum rotation for tick labels when condensing is necessary.  <em>Note: Only applicable to horizontal scales.</em></td>
+    </tr>
+    <tr>
+      <td><em>ticks</em>.maxTicksLimit</td>
+      <td style="text-align: center">Number</td>
+      <td>11</td>
+      <td>Maximum number of ticks and gridlines to show. If not defined, it will limit to 11 ticks but will show all gridlines.</td>
+    </tr>
+    <tr>
+      <td><em>ticks</em>.padding</td>
+      <td style="text-align: center">Number</td>
+      <td>10</td>
+      <td>Padding between the tick label and the axis. <em>Note: Only applicable to horizontal scales.</em></td>
+    </tr>
+    <tr>
+      <td><em>ticks</em>.mirror</td>
+      <td style="text-align: center">Boolean</td>
+      <td>false</td>
+      <td>Flips tick labels around axis, displaying the labels inside the chart instead of outside. <em>Note: Only applicable to vertical scales.</em></td>
+    </tr>
+    <tr>
+      <td><em>ticks</em>.reverse</td>
+      <td style="text-align: center">Boolean</td>
+      <td>false</td>
+      <td>Reverses order of tick labels.</td>
+    </tr>
+    <tr>
+      <td><em>ticks</em>.display</td>
+      <td style="text-align: center">Boolean</td>
+      <td>true</td>
+      <td>If true, show the ticks.</td>
+    </tr>
+    <tr>
+      <td><em>ticks</em>.suggestedMin</td>
+      <td style="text-align: center">Number</td>
+      <td>-</td>
+      <td>User defined minimum number for the scale, overrides minimum value <em>except for if</em> it is higher than the minimum value.</td>
+    </tr>
+    <tr>
+      <td><em>ticks</em>.suggestedMax</td>
+      <td style="text-align: center">Number</td>
+      <td>-</td>
+      <td>User defined maximum number for the scale, overrides maximum value <em>except for if</em> it is lower than the maximum value.</td>
+    </tr>
+    <tr>
+      <td><em>ticks</em>.min</td>
+      <td style="text-align: center">Number</td>
+      <td>-</td>
+      <td>User defined minimum number for the scale, overrides minimum value.</td>
+    </tr>
+    <tr>
+      <td><em>ticks</em>.max</td>
+      <td style="text-align: center">Number</td>
+      <td>-</td>
+      <td>User defined minimum number for the scale, overrides maximum value</td>
+    </tr>
+    <tr>
+      <td><em>ticks</em>.autoSkip</td>
+      <td style="text-align: center">Boolean</td>
+      <td>true</td>
+      <td>If true, automatically calculates how many labels that can be shown and hides labels accordingly. Turn it off to show all labels no matter what</td>
+    </tr>
+    <tr>
+      <td><em>ticks</em>.callback</td>
+      <td style="text-align: center">Function</td>
+      <td><code class="highlighter-rouge">function(value) { return '' + value; } </code></td>
+      <td>Returns the string representation of the tick value as it should be displayed on the chart.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The <code class="highlighter-rouge">callback</code> method may be used for advanced tick customization. The following callback would display every label in scientific notation
+<code class="highlighter-rouge">javascript
+{
+    scales: {
+        xAxes: [{
+            ticks: {
+                // Return an empty string to draw the tick line but hide the tick label
+                // Return `null` or `undefined` to hide the tick line entirely
+               	userCallback: function(value, index, values) {
+    				return value.toExponential();
+    			}
+            }
+        }]
+    }
+}
+</code></p>
+
+<h3 id="category-scale">Category Scale</h3>
+<p>The category scale will be familiar to those who have used v1.0. Labels are drawn in from the labels array included in the chart data.</p>
+
+<p>The category scale extends the core scale class with the following tick template:</p>
+
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="p">{</span>
+	<span class="nl">position</span><span class="p">:</span> <span class="s2">"bottom"</span><span class="p">,</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>The <code class="highlighter-rouge">ticks.min</code> and <code class="highlighter-rouge">ticks.max</code> attributes may be used with the category scale. Unlike other scales, the value of these attributes must simply be something that can be found in the <code class="highlighter-rouge">labels</code> array of the data object.</p>
+
+<h3 id="linear-scale">Linear Scale</h3>
+<p>The linear scale can be used to display numerical data. It can be placed on either the x or y axis. The scatter chart type automatically configures a line chart to use one of these scales for the x axis.</p>
+
+<p>The linear scale extends the core scale class with the following tick template:</p>
+
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="p">{</span>
+	<span class="nl">position</span><span class="p">:</span> <span class="s2">"left"</span><span class="p">,</span>
+    <span class="nx">ticks</span><span class="err">:</span> <span class="p">{</span>
+        <span class="nl">callback</span><span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">tickValue</span><span class="p">,</span> <span class="nx">index</span><span class="p">,</span> <span class="nx">ticks</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">delta</span> <span class="o">=</span> <span class="nx">ticks</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="nx">ticks</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+
+            <span class="c1">// If we have a number like 2.5 as the delta, figure out how many decimal places we need</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">abs</span><span class="p">(</span><span class="nx">delta</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="nx">tickValue</span> <span class="o">!==</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nx">tickValue</span><span class="p">))</span> <span class="p">{</span>
+                    <span class="c1">// not an integer</span>
+                    <span class="nx">delta</span> <span class="o">=</span> <span class="nx">tickValue</span> <span class="o">-</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nx">tickValue</span><span class="p">);</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+
+            <span class="kd">var</span> <span class="nx">logDelta</span> <span class="o">=</span> <span class="nx">helpers</span><span class="p">.</span><span class="nx">log10</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">abs</span><span class="p">(</span><span class="nx">delta</span><span class="p">));</span>
+            <span class="kd">var</span> <span class="nx">tickString</span> <span class="o">=</span> <span class="s1">''</span><span class="p">;</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="nx">tickValue</span> <span class="o">!==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kd">var</span> <span class="nx">numDecimal</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nx">logDelta</span><span class="p">);</span>
+                <span class="nx">numDecimal</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">max</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">min</span><span class="p">(</span><span class="nx">numDecimal</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span> <span class="mi">0</span><span class="p">);</span> <span class="c1">// toFixed has a max of 20 decimal places</span>
+                <span class="nx">tickString</span> <span class="o">=</span> <span class="nx">tickValue</span><span class="p">.</span><span class="nx">toFixed</span><span class="p">(</span><span class="nx">numDecimal</span><span class="p">);</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            	<span class="nx">tickString</span> <span class="o">=</span> <span class="s1">'0'</span><span class="p">;</span> <span class="c1">// never show decimal places for 0</span>
+            <span class="p">}</span>
+
+      		<span class="k">return</span> <span class="nx">tickString</span><span class="p">;</span>
+      	<span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>It also provides additional configuration options:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th style="text-align: center">Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><em>ticks</em>.stepSize</td>
+      <td style="text-align: center">Number</td>
+      <td>-</td>
+      <td>User defined fixed step size for the scale. If set, the scale ticks will be enumerated by multiple of stepSize, having one tick per increment. If not set, the ticks are labeled automatically using the nice numbers algorithm.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="logarithmic-scale">Logarithmic Scale</h3>
+<p>The logarithmic scale is used to display logarithmic data of course. It can be placed on either the x or y axis.</p>
+
+<p>The log scale extends the core scale class with the following tick template:</p>
+
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="p">{</span>
+	<span class="nl">position</span><span class="p">:</span> <span class="s2">"left"</span><span class="p">,</span>
+	<span class="nx">ticks</span><span class="err">:</span> <span class="p">{</span>
+		<span class="nl">callback</span><span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
+			<span class="kd">var</span> <span class="nx">remain</span> <span class="o">=</span> <span class="nx">value</span> <span class="o">/</span> <span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nx">Chart</span><span class="p">.</span><span class="nx">helpers</span><span class="p">.</span><span class="nx">log10</span><span class="p">(</span><span class="nx">value</span><span class="p">))));</span>
+
+        	<span class="k">if</span> <span class="p">(</span><span class="nx">remain</span> <span class="o">===</span> <span class="mi">1</span> <span class="o">||</span> <span class="nx">remain</span> <span class="o">===</span> <span class="mi">2</span> <span class="o">||</span> <span class="nx">remain</span> <span class="o">===</span> <span class="mi">5</span><span class="p">)</span> <span class="p">{</span>
+        		<span class="k">return</span> <span class="nx">value</span><span class="p">.</span><span class="nx">toExponential</span><span class="p">();</span>
+        	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        		<span class="k">return</span> <span class="s1">''</span><span class="p">;</span>
+        	<span class="p">}</span>
+        <span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<h3 id="time-scale">Time Scale</h3>
+<p>The time scale is used to display times and dates. It can be placed on the x axis. When building its ticks, it will automatically calculate the most comfortable unit base on the size of the scale.</p>
+
+<p>The time scale extends the core scale class with the following tick template:</p>
+
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="p">{</span>
+	<span class="nl">position</span><span class="p">:</span> <span class="s2">"bottom"</span><span class="p">,</span>
+	<span class="nx">time</span><span class="err">:</span> <span class="p">{</span>
+		<span class="c1">// string/callback - By default, date objects are expected. You may use a pattern string from http://momentjs.com/docs/#/parsing/string-format/ to parse a time string format, or use a callback function that is passed the label, and must return a moment() instance.</span>
+		<span class="nl">parser</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+		<span class="c1">// string - By default, unit will automatically be detected.  Override with 'week', 'month', 'year', etc. (see supported time measurements)</span>
+		<span class="nx">unit</span><span class="err">:</span> <span class="kc">false</span><span class="p">,</span>
+
+		<span class="c1">// Number - The number of steps of the above unit between ticks</span>
+		<span class="nx">unitStepSize</span><span class="err">:</span> <span class="mi">1</span>
+
+		<span class="c1">// string - By default, no rounding is applied.  To round, set to a supported time unit eg. 'week', 'month', 'year', etc.</span>
+		<span class="nl">round</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+		
+		<span class="c1">// Moment js for each of the units. Replaces `displayFormat`</span>
+		<span class="c1">// To override, use a pattern string from http://momentjs.com/docs/#/displaying/format/</span>
+		<span class="nx">displayFormats</span><span class="err">:</span> <span class="p">{</span>
+			<span class="s1">'millisecond'</span><span class="err">:</span> <span class="s1">'SSS [ms]'</span><span class="p">,</span>
+			<span class="s1">'second'</span><span class="err">:</span> <span class="s1">'h:mm:ss a'</span><span class="p">,</span> <span class="c1">// 11:20:01 AM</span>
+			<span class="s1">'minute'</span><span class="err">:</span> <span class="s1">'h:mm:ss a'</span><span class="p">,</span> <span class="c1">// 11:20:01 AM</span>
+			<span class="s1">'hour'</span><span class="err">:</span> <span class="s1">'MMM D, hA'</span><span class="p">,</span> <span class="c1">// Sept 4, 5PM</span>
+			<span class="s1">'day'</span><span class="err">:</span> <span class="s1">'ll'</span><span class="p">,</span> <span class="c1">// Sep 4 2015</span>
+			<span class="s1">'week'</span><span class="err">:</span> <span class="s1">'ll'</span><span class="p">,</span> <span class="c1">// Week 46, or maybe "[W]WW - YYYY" ?</span>
+			<span class="s1">'month'</span><span class="err">:</span> <span class="s1">'MMM YYYY'</span><span class="p">,</span> <span class="c1">// Sept 2015</span>
+			<span class="s1">'quarter'</span><span class="err">:</span> <span class="s1">'[Q]Q - YYYY'</span><span class="p">,</span> <span class="c1">// Q3</span>
+			<span class="s1">'year'</span><span class="err">:</span> <span class="s1">'YYYY'</span><span class="p">,</span> <span class="c1">// 2015</span>
+		<span class="p">},</span>
+		<span class="c1">// Sets the display format used in tooltip generation</span>
+		<span class="nx">tooltipFormat</span><span class="err">:</span> <span class="s1">''</span>
+	<span class="p">},</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>The following time measurements are supported:</p>
+
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="p">{</span>
+	<span class="s1">'millisecond'</span><span class="err">:</span> <span class="p">{</span>
+		<span class="nl">display</span><span class="p">:</span> <span class="s1">'SSS [ms]'</span><span class="p">,</span> <span class="c1">// 002 ms</span>
+		<span class="nx">maxStep</span><span class="err">:</span> <span class="mi">1000</span><span class="p">,</span>
+	<span class="p">},</span>
+	<span class="s1">'second'</span><span class="err">:</span> <span class="p">{</span>
+		<span class="nl">display</span><span class="p">:</span> <span class="s1">'h:mm:ss a'</span><span class="p">,</span> <span class="c1">// 11:20:01 AM</span>
+		<span class="nx">maxStep</span><span class="err">:</span> <span class="mi">60</span><span class="p">,</span>
+	<span class="p">},</span>
+	<span class="s1">'minute'</span><span class="err">:</span> <span class="p">{</span>
+		<span class="nl">display</span><span class="p">:</span> <span class="s1">'h:mm:ss a'</span><span class="p">,</span> <span class="c1">// 11:20:01 AM</span>
+		<span class="nx">maxStep</span><span class="err">:</span> <span class="mi">60</span><span class="p">,</span>
+	<span class="p">},</span>
+	<span class="s1">'hour'</span><span class="err">:</span> <span class="p">{</span>
+		<span class="nl">display</span><span class="p">:</span> <span class="s1">'MMM D, hA'</span><span class="p">,</span> <span class="c1">// Sept 4, 5PM</span>
+		<span class="nx">maxStep</span><span class="err">:</span> <span class="mi">24</span><span class="p">,</span>
+	<span class="p">},</span>
+	<span class="s1">'day'</span><span class="err">:</span> <span class="p">{</span>
+		<span class="nl">display</span><span class="p">:</span> <span class="s1">'ll'</span><span class="p">,</span> <span class="c1">// Sep 4 2015</span>
+		<span class="nx">maxStep</span><span class="err">:</span> <span class="mi">7</span><span class="p">,</span>
+	<span class="p">},</span>
+	<span class="s1">'week'</span><span class="err">:</span> <span class="p">{</span>
+		<span class="nl">display</span><span class="p">:</span> <span class="s1">'ll'</span><span class="p">,</span> <span class="c1">// Week 46, or maybe "[W]WW - YYYY" ?</span>
+		<span class="nx">maxStep</span><span class="err">:</span> <span class="mf">4.3333</span><span class="p">,</span>
+	<span class="p">},</span>
+	<span class="s1">'month'</span><span class="err">:</span> <span class="p">{</span>
+		<span class="nl">display</span><span class="p">:</span> <span class="s1">'MMM YYYY'</span><span class="p">,</span> <span class="c1">// Sept 2015</span>
+		<span class="nx">maxStep</span><span class="err">:</span> <span class="mi">12</span><span class="p">,</span>
+	<span class="p">},</span>
+	<span class="s1">'quarter'</span><span class="err">:</span> <span class="p">{</span>
+		<span class="nl">display</span><span class="p">:</span> <span class="s1">'[Q]Q - YYYY'</span><span class="p">,</span> <span class="c1">// Q3</span>
+		<span class="nx">maxStep</span><span class="err">:</span> <span class="mi">4</span><span class="p">,</span>
+	<span class="p">},</span>
+	<span class="s1">'year'</span><span class="err">:</span> <span class="p">{</span>
+		<span class="nl">display</span><span class="p">:</span> <span class="s1">'YYYY'</span><span class="p">,</span> <span class="c1">// 2015</span>
+		<span class="nx">maxStep</span><span class="err">:</span> <span class="kc">false</span><span class="p">,</span>
+	<span class="p">},</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<h3 id="radial-linear-scale">Radial Linear Scale</h3>
+<p>The radial linear scale is used specifically for the radar chart type.</p>
+
+<p>The radial linear scale extends the core scale class with the following tick template:</p>
+
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="p">{</span>
+	<span class="nl">animate</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+	<span class="nx">lineArc</span><span class="err">:</span> <span class="kc">false</span><span class="p">,</span>
+	<span class="nx">position</span><span class="err">:</span> <span class="s2">"chartArea"</span><span class="p">,</span>
+
+	<span class="nx">angleLines</span><span class="err">:</span> <span class="p">{</span>
+		<span class="nl">display</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+		<span class="nx">color</span><span class="err">:</span> <span class="s2">"rgba(0, 0, 0, 0.1)"</span><span class="p">,</span>
+		<span class="nx">lineWidth</span><span class="err">:</span> <span class="mi">1</span>
+	<span class="p">},</span>
+
+	<span class="c1">// label settings</span>
+	<span class="nx">ticks</span><span class="err">:</span> <span class="p">{</span>
+		<span class="c1">//Boolean - Show a backdrop to the scale label</span>
+		<span class="nl">showLabelBackdrop</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+
+		<span class="c1">//String - The colour of the label backdrop</span>
+		<span class="nx">backdropColor</span><span class="err">:</span> <span class="s2">"rgba(255,255,255,0.75)"</span><span class="p">,</span>
+
+		<span class="c1">//Number - The backdrop padding above &amp; below the label in pixels</span>
+		<span class="nx">backdropPaddingY</span><span class="err">:</span> <span class="mi">2</span><span class="p">,</span>
+
+		<span class="c1">//Number - The backdrop padding to the side of the label in pixels</span>
+		<span class="nx">backdropPaddingX</span><span class="err">:</span> <span class="mi">2</span><span class="p">,</span>
+
+		<span class="c1">//Number - Limit the maximum number of ticks and gridlines</span>
+		<span class="nx">maxTicksLimit</span><span class="err">:</span> <span class="mi">11</span><span class="p">,</span>
+	<span class="p">},</span>
+
+	<span class="nx">pointLabels</span><span class="err">:</span> <span class="p">{</span>
+		<span class="c1">//String - Point label font declaration</span>
+		<span class="nl">fontFamily</span><span class="p">:</span> <span class="s2">"'Arial'"</span><span class="p">,</span>
+
+		<span class="c1">//String - Point label font weight</span>
+		<span class="nx">fontStyle</span><span class="err">:</span> <span class="s2">"normal"</span><span class="p">,</span>
+
+		<span class="c1">//Number - Point label font size in pixels</span>
+		<span class="nx">fontSize</span><span class="err">:</span> <span class="mi">10</span><span class="p">,</span>
+
+		<span class="c1">//String - Point label font colour</span>
+		<span class="nx">fontColor</span><span class="err">:</span> <span class="s2">"#666"</span><span class="p">,</span>
+
+		<span class="c1">//Function - Used to determine point labels to show in scale</span>
+		<span class="nx">callback</span><span class="err">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">pointLabel</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">pointLabel</span><span class="p">;</span>
+		<span class="p">}</span>
+	<span class="p">},</span>
+<span class="p">}</span>
+</code></pre>
+</div>
